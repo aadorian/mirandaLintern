@@ -20,6 +20,9 @@
   "activationEvents": [
     "onStartupFinished",
     "onLanguage:miranda",
+    "onView:miranda.guide",
+    "onView:miranda.examples",
+    "onView:miranda.lint",
     "onCommand:miranda.runLint",
     "onCommand:miranda.startTutorial",
     "onCommand:miranda.openBasicExample",
@@ -27,7 +30,15 @@
     "onCommand:miranda.openFibExample",
     "onCommand:miranda.openLanguageGuide",
     "onCommand:miranda.openLintSettings",
-    "onCommand:miranda.openWalkthrough"
+    "onCommand:miranda.openWalkthrough",
+    "onCommand:miranda.showLintPanel",
+    "onCommand:miranda.showMirandaSidebar",
+    "onCommand:miranda.openExampleFile",
+    "onCommand:miranda.runLintOnResource",
+    "onCommand:miranda.openSelectedExample",
+    "onCommand:miranda.runLintOnSelectedExample",
+    "onCommand:miranda.goToSelectedLintIssue",
+    "onCommand:miranda.goToLintIssue"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -245,7 +256,99 @@
       },
       {
         "command": "miranda.openLintSettings",
-        "title": "Miranda: Open Lint Settings"
+        "title": "Miranda: Open Lint Settings",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "miranda.runLintOnResource",
+        "title": "Miranda: Run Linter on File",
+        "icon": "$(debug-start)"
+      },
+      {
+        "command": "miranda.openSelectedExample",
+        "title": "Miranda: Open Selected Example"
+      },
+      {
+        "command": "miranda.runLintOnSelectedExample",
+        "title": "Miranda: Run Linter on Selected Example",
+        "icon": "$(debug-start)"
+      },
+      {
+        "command": "miranda.goToSelectedLintIssue",
+        "title": "Miranda: Go to Selected Lint Issue"
+      },
+      {
+        "command": "miranda.showLintPanel",
+        "title": "Miranda: Show Lint Panel",
+        "icon": "$(list-unordered)"
+      },
+      {
+        "command": "miranda.showMirandaSidebar",
+        "title": "Miranda: Show Sidebar",
+        "icon": "$(library)"
+      },
+      {
+        "command": "miranda.openExampleFile",
+        "title": "Miranda: Open Example File"
+      },
+      {
+        "command": "miranda.goToLintIssue",
+        "title": "Miranda: Go to Lint Issue"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "miranda",
+          "title": "Miranda",
+          "icon": "media/icons/miranda.svg"
+        }
+      ]
+    },
+    "views": {
+      "miranda": [
+        {
+          "id": "miranda.guide",
+          "name": "Get Started"
+        },
+        {
+          "id": "miranda.examples",
+          "name": "Examples"
+        }
+      ],
+      "panel": [
+        {
+          "id": "miranda.lint",
+          "name": "Miranda Lint"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "miranda.guide",
+        "contents": "New to Miranda?\n[Start Tutorial](command:miranda.startTutorial)\n[Open Walkthrough](command:miranda.openWalkthrough)"
+      },
+      {
+        "view": "miranda.lint",
+        "contents": "Open a Miranda `.m` file to see lint issues here.\n[Run Linter](command:miranda.runLint)"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "miranda.editorMenu",
+        "label": "Miranda"
+      },
+      {
+        "id": "miranda.explorerMenu",
+        "label": "Miranda"
+      },
+      {
+        "id": "miranda.guideMenu",
+        "label": "Miranda"
+      },
+      {
+        "id": "miranda.exampleMenu",
+        "label": "Miranda"
       }
     ],
     "menus": {
@@ -268,19 +371,105 @@
       ],
       "editor/context": [
         {
-          "command": "miranda.startTutorial",
+          "submenu": "miranda.editorMenu",
           "when": "resourceLangId == miranda",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "submenu": "miranda.explorerMenu",
+          "when": "resourceExtname == .m",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "submenu": "miranda.guideMenu",
+          "when": "view == miranda.guide && viewItem == mirandaGuide",
+          "group": "inline"
+        },
+        {
+          "submenu": "miranda.exampleMenu",
+          "when": "view == miranda.examples && viewItem =~ /^mirandaExample:/",
+          "group": "inline"
+        },
+        {
+          "command": "miranda.goToSelectedLintIssue",
+          "when": "view == miranda.lint && viewItem == mirandaLintIssue",
           "group": "miranda@1"
+        }
+      ],
+      "miranda.editorMenu": [
+        {
+          "command": "miranda.startTutorial",
+          "group": "1_learn@1"
         },
         {
           "command": "miranda.openWalkthrough",
-          "when": "resourceLangId == miranda",
-          "group": "miranda@2"
+          "group": "1_learn@2"
+        },
+        {
+          "command": "miranda.openLanguageGuide",
+          "group": "1_learn@3"
         },
         {
           "command": "miranda.runLint",
-          "when": "resourceLangId == miranda",
-          "group": "miranda@3"
+          "group": "2_lint@1"
+        },
+        {
+          "command": "miranda.showLintPanel",
+          "group": "2_lint@2"
+        },
+        {
+          "command": "miranda.openLintSettings",
+          "group": "2_lint@3"
+        }
+      ],
+      "miranda.explorerMenu": [
+        {
+          "command": "miranda.runLintOnResource",
+          "group": "1_lint@1"
+        },
+        {
+          "command": "miranda.showLintPanel",
+          "group": "1_lint@2"
+        },
+        {
+          "command": "miranda.openWalkthrough",
+          "group": "2_learn@1"
+        },
+        {
+          "command": "miranda.openLintSettings",
+          "group": "2_learn@2"
+        }
+      ],
+      "miranda.guideMenu": [
+        {
+          "command": "miranda.startTutorial",
+          "group": "1_learn@1"
+        },
+        {
+          "command": "miranda.openWalkthrough",
+          "group": "1_learn@2"
+        },
+        {
+          "command": "miranda.openLanguageGuide",
+          "group": "1_learn@3"
+        },
+        {
+          "command": "miranda.openLintSettings",
+          "group": "2_lint@1"
+        }
+      ],
+      "miranda.exampleMenu": [
+        {
+          "command": "miranda.openSelectedExample",
+          "group": "1_file@1"
+        },
+        {
+          "command": "miranda.runLintOnSelectedExample",
+          "group": "2_lint@1"
         }
       ],
       "commandPalette": [
@@ -292,6 +481,12 @@
         },
         {
           "command": "miranda.runLint"
+        },
+        {
+          "command": "miranda.showLintPanel"
+        },
+        {
+          "command": "miranda.showMirandaSidebar"
         },
         {
           "command": "miranda.openBasicExample"
@@ -307,6 +502,52 @@
         },
         {
           "command": "miranda.openLintSettings"
+        },
+        {
+          "command": "miranda.openExampleFile",
+          "when": "false"
+        },
+        {
+          "command": "miranda.goToLintIssue",
+          "when": "false"
+        },
+        {
+          "command": "miranda.runLintOnResource",
+          "when": "false"
+        },
+        {
+          "command": "miranda.openSelectedExample",
+          "when": "false"
+        },
+        {
+          "command": "miranda.runLintOnSelectedExample",
+          "when": "false"
+        },
+        {
+          "command": "miranda.goToSelectedLintIssue",
+          "when": "false"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "miranda.startTutorial",
+          "when": "view == miranda.guide",
+          "group": "navigation@1"
+        },
+        {
+          "command": "miranda.openWalkthrough",
+          "when": "view == miranda.guide",
+          "group": "navigation@2"
+        },
+        {
+          "command": "miranda.runLint",
+          "when": "view == miranda.lint",
+          "group": "navigation@1"
+        },
+        {
+          "command": "miranda.openLintSettings",
+          "when": "view == miranda.lint",
+          "group": "navigation@2"
         }
       ]
     },

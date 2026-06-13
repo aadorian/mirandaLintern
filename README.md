@@ -52,11 +52,25 @@ After installing the extension, open the **Get Started with Miranda** walkthroug
 
 Walkthroughs follow the [VS Code UX guidelines](https://code.visualstudio.com/api/ux-guidelines/walkthroughs) with theme-aware SVG illustrations and actionable steps.
 
-**Quick access buttons** (when a `.m` file is open):
+**Quick access** (per VS Code UX guidelines):
 
-- **Editor title bar** — rocket (Start Tutorial), book (Walkthrough), play (Run Linter)
-- **Status bar** — `Miranda Tutorial`, `Miranda Guide`, and `Run Miranda Lint`
-- **Command Palette** — `Miranda: Start Tutorial` opens an example and the walkthrough together
+| Surface | What it does |
+|---------|----------------|
+| **Activity Bar** (λ icon) | Sidebar with **Get Started** actions and **Examples** tree |
+| **Panel** → Miranda Lint | Lint issues for the active `.m` file; click to jump to line |
+| **Status Bar** (right) | Shows `Miranda` or `$(error) N $(warning) M` when editing `.m` files |
+| **Editor title bar** | Rocket (Start Tutorial), book (Walkthrough), play (Run Linter) |
+| **Command Palette** | `Miranda: Start Tutorial` opens an example and the walkthrough together |
+
+**Context menus** ([VS Code guidelines](https://code.visualstudio.com/api/ux-guidelines/context-menus)) — grouped under a **Miranda** submenu, shown only when relevant:
+
+| Location | When shown | Actions |
+|----------|------------|---------|
+| Editor right-click | `.m` file open | Learn (tutorial, walkthrough, guide) and Lint (run, panel, settings) |
+| Explorer right-click | `.m` file selected | Run linter on file, lint panel, walkthrough, settings |
+| Get Started tree | guide item selected | Tutorial, walkthrough, guide, settings |
+| Examples tree | example file selected | Open example, run linter |
+| Lint panel | issue selected | Go to issue |
 
 ### Written tutorial
 
@@ -161,6 +175,7 @@ Useful options:
 |-------|-------|------------------|
 | Linter | `src/test/linter.test.ts` | All 13 rules + `examples/` fixtures |
 | Examples | `src/test/examples.test.ts` | All `examples/**/*.m` lint-clean (no errors) |
+| Views | `src/test/views/*.test.ts` | Example manifest and lint panel formatting |
 | Config | `src/test/config.test.ts` | `buildLintConfig` and overrides |
 | Diagnostics | `src/test/diagnostics.test.ts` | Severity mapping and ranges |
 | Provider | `src/test/provider.test.ts` | Diagnostic publishing in VS Code |

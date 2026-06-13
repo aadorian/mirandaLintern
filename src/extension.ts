@@ -1,66 +1,16 @@
 import * as vscode from "vscode";
 import { MirandaLintProvider } from "./linter/provider";
-
-let lintProvider: MirandaLintProvider | undefined;
+import { registerViews, openExtensionFile } from "./views/registerViews";
+import { registerStatusBar } from "./statusBar";
 
 const WALKTHROUGH_ID = "miranda-lang.miranda#miranda-getting-started";
-
-async function openExtensionFile(
-  context: vscode.ExtensionContext,
-  relativePath: string
-): Promise<void> {
-  const uri = vscode.Uri.joinPath(context.extensionUri, ...relativePath.split("/"));
-  await vscode.commands.executeCommand("vscode.open", uri);
-}
 
 async function openWalkthrough(): Promise<void> {
   await vscode.commands.executeCommand("workbench.action.openWalkthrough", WALKTHROUGH_ID);
 }
 
-function registerStatusBarButtons(context: vscode.ExtensionContext): void {
-  const startTutorialButton = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Left,
-    100
-  );
-  startTutorialButton.text = "$(rocket) Miranda Tutorial";
-  startTutorialButton.command = "miranda.startTutorial";
-  startTutorialButton.tooltip = "Open a Miranda example and the Get Started walkthrough";
-  startTutorialButton.show();
-
-  const walkthroughButton = vscode.window.createStatusBarItem(
-    vscode.StatusBarAlignment.Left,
-    99
-  );
-  walkthroughButton.text = "$(book) Miranda Guide";
-  walkthroughButton.command = "miranda.openWalkthrough";
-  walkthroughButton.tooltip = "Open the Get Started with Miranda walkthrough";
-  walkthroughButton.show();
-
-  const lintButton = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 98);
-  lintButton.text = "$(debug-start) Run Miranda Lint";
-  lintButton.command = "miranda.runLint";
-  lintButton.tooltip = "Run the Miranda linter on the active file";
-
-  const syncLintButtonVisibility = (): void => {
-    const editor = vscode.window.activeTextEditor;
-    if (editor?.document.languageId === "miranda") {
-      lintButton.show();
-    } else {
-      lintButton.hide();
-    }
-  };
-
-  syncLintButtonVisibility();
-  context.subscriptions.push(
-    startTutorialButton,
-    walkthroughButton,
-    lintButton,
-    vscode.window.onDidChangeActiveTextEditor(syncLintButtonVisibility)
-  );
-}
-
 export function activate(context: vscode.ExtensionContext): void {
-  lintProvider = new MirandaLintProvider();
+  const lintProvider = new MirandaLintProvider();
 
   const openBasicExample = () => openExtensionFile(context, "examples/01-basic-ideas.m");
   const openComprehensionsExample = () =>
@@ -74,17 +24,38 @@ export function activate(context: vscode.ExtensionContext): void {
     await openWalkthrough();
   };
 
+  const lintDocument = (document: vscode.TextDocument): void => {
+    lintProvider.lintDocument(document);
+  };
+
+  const runLintOnResource = async (uri?: vscode.Uri): Promise<void> => {
+    const target = uri ?? vscode.window.activeTextEditor?.document.uri;
+    if (!target) {
+      vscode.window.showWarningMessage("Select a Miranda (.m) file to run the linter.");
+      return;
+    }
+    const doc = await vscode.workspace.openTextDocument(target);
+    if (doc.languageId !== "miranda") {
+      vscode.window.showWarningMessage("Miranda linter only runs on .m files.");
+      return;
+    }
+    await vscode.window.showTextDocument(doc);
+    lintDocument(doc);
+    vscode.window.showInformationMessage("Miranda lint complete.");
+  };
+
   context.subscriptions.push(
     lintProvider,
     vscode.commands.registerCommand("miranda.runLint", () => {
       const editor = vscode.window.activeTextEditor;
       if (editor?.document.languageId === "miranda") {
-        lintProvider?.lintDocument(editor.document);
+        lintDocument(editor.document);
         vscode.window.showInformationMessage("Miranda lint complete.");
       } else {
         vscode.window.showWarningMessage("Open a Miranda (.m) file to run the linter.");
       }
     }),
+    vscode.commands.registerCommand("miranda.runLintOnResource", runLintOnResource),
     vscode.commands.registerCommand("miranda.startTutorial", startTutorial),
     vscode.commands.registerCommand("miranda.openBasicExample", openBasicExample),
     vscode.commands.registerCommand("miranda.openComprehensionsExample", openComprehensionsExample),
@@ -94,7 +65,8 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand("miranda.openWalkthrough", openWalkthrough)
   );
 
-  registerStatusBarButtons(context);
+  registerViews(context, lintDocument);
+  registerStatusBar(context);
 
   if (process.env.MIRANDA_OPEN_WALKTHROUGH === "1") {
     void startTutorial();
@@ -102,6 +74,5 @@ export function activate(context: vscode.ExtensionContext): void {
 }
 
 export function deactivate(): void {
-  lintProvider?.dispose();
-  lintProvider = undefined;
+  // disposables cleaned up via context.subscriptions
 }
