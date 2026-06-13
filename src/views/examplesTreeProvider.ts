@@ -31,6 +31,8 @@ export class ExamplesTreeProvider implements vscode.TreeDataProvider<ExamplesTre
     }
 
     const item = new vscode.TreeItem(element.entry.label, vscode.TreeItemCollapsibleState.None);
+    item.description = element.entry.description;
+    item.tooltip = element.entry.description;
     item.iconPath = new vscode.ThemeIcon("file");
     item.contextValue = `mirandaExample:${element.entry.path}`;
     item.command = {

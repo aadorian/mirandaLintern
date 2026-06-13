@@ -17,3 +17,23 @@ result = sum [1,3..100]
 employee = ("Jones", True, False, 39)
 
 overview_demo = z + fac 5 + #days + result + snd employee
+
+--- Tuples
+
+name = fst employee
+is_manager = snd employee
+is_developer = employee !! 2
+age = employee !! 3
+
+--- Lists
+
+-- days is already defined above: week_days ++ ["Sat","Sun"]
+-- print days
+
+-- print (days !! 2)
+
+
+print (drop 3 days)
+
+
+-- print (length days)

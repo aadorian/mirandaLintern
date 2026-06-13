@@ -39,6 +39,63 @@ Configurable rules with severity `off` / `warn` / `error`:
 
 ## Learn Miranda
 
+### Extension UI
+
+The extension follows [VS Code UX guidelines](https://code.visualstudio.com/api/ux-guidelines/overview) for sidebars, panels, walkthroughs, context menus, and the status bar.
+
+| Surface | What it does |
+|---------|----------------|
+| **Activity Bar** (λ icon) | **Concepts** — 12 Turner topics with summaries; **Examples** — runnable scripts with descriptions |
+| **Panel → Concept Guide** | Themed webview: explanation, code sample, **Open Example**, and **Open Walkthrough** |
+| **Panel → Lint Issues** | Lint diagnostics for the active `.m` file; click an issue to jump to the line |
+| **Status Bar** (right) | `Miranda` when idle, or `$(error) N $(warning) M` while editing `.m` files |
+| **Editor title bar** | Rocket (Start Tutorial), book (Walkthrough), play (Run Linter) |
+
+**Workflow:** open **Concepts** in the sidebar → select a topic → read the explanation in **Concept Guide** → the matching example opens in the editor → check **Lint Issues** while editing.
+
+### Concepts sidebar
+
+Twelve structured topics from David Turner's [An Overview of Miranda](https://www.cs.kent.ac.uk/people/staff/dat/miranda/Overview.html). Each concept includes a summary, prose explanation, code sample, and linked example file.
+
+| # | Concept | Example |
+|---|---------|---------|
+| 1 | Basic Ideas | `examples/01-basic-ideas.m` |
+| 2 | Programming Environment | `examples/fib.m` |
+| 3 | Guarded Equations | `examples/02-guarded-equations.m` |
+| 4 | Pattern Matching | `examples/03-pattern-matching.m` |
+| 5 | Higher-Order Functions | `examples/04-higher-order.m` |
+| 6 | List Comprehensions | `examples/05-list-comprehensions.m` |
+| 7 | Lazy Evaluation | `examples/06-lazy-infinite-lists.m` |
+| 8 | Polymorphic Typing | `examples/07-polymorphic-types.m` |
+| 9 | User-Defined Types | `examples/08-user-defined-types.m` |
+| 10 | Type Synonyms | `examples/09-type-synonyms.m` |
+| 11 | Abstract Data Types | `examples/10-abstract-data-types.m` |
+| 12 | Separate Compilation | `examples/modules/use_matrix.m` |
+
+### Commands
+
+All commands are available from the **Command Palette** (`Cmd+Shift+P` / `Ctrl+Shift+P`) under the `Miranda:` prefix.
+
+| Command | Description |
+|---------|-------------|
+| `Miranda: Start Tutorial` | Opens the basic-ideas example and the Getting Started walkthrough |
+| `Miranda: Open Walkthrough` | Opens the VS Code Getting Started walkthrough |
+| `Miranda: Show Concept Guide Panel` | Focuses the Concept Guide panel |
+| `Miranda: Show Selected Concept in Panel` | Shows the selected Concepts tree item in the panel |
+| `Miranda: Show Lint Panel` | Focuses the Lint Issues panel |
+| `Miranda: Show Sidebar` | Opens the Miranda Activity Bar sidebar |
+| `Miranda: Run Linter` | Lints the active `.m` file |
+| `Miranda: Run Linter on File` | Lints a file from the Explorer context menu |
+| `Miranda: Run Linter on Selected Example` | Opens and lints an example from the Examples tree |
+| `Miranda: Go to Lint Issue` | Jumps to a diagnostic line in the editor |
+| `Miranda: Open Example File` | Opens a bundled example by path |
+| `Miranda: Open Selected Example` | Opens the selected file in the Examples tree |
+| `Miranda: Open Basic Ideas Example` | Walkthrough step: opens `01-basic-ideas.m` |
+| `Miranda: Open List Comprehensions Example` | Walkthrough step: opens `05-list-comprehensions.m` |
+| `Miranda: Open Fibonacci Example` | Walkthrough step: opens `fib.m` |
+| `Miranda: Open Language Guide` | Opens `docs/walkthrough.md` |
+| `Miranda: Open Lint Settings` | Opens Miranda lint settings |
+
 ### Getting Started walkthrough
 
 After installing the extension, open the **Get Started with Miranda** walkthrough from the VS Code Getting Started page (or run **Help: Get Started**). It guides you through:
@@ -50,25 +107,15 @@ After installing the extension, open the **Get Started with Miranda** walkthroug
 5. Configuring lint rules
 6. The full language guide
 
-Walkthroughs follow the [VS Code UX guidelines](https://code.visualstudio.com/api/ux-guidelines/walkthroughs) with theme-aware SVG illustrations and actionable steps.
+Walkthroughs follow the [VS Code walkthrough guidelines](https://code.visualstudio.com/api/ux-guidelines/walkthroughs) with theme-aware SVG illustrations and actionable steps.
 
-**Quick access** (per VS Code UX guidelines):
-
-| Surface | What it does |
-|---------|----------------|
-| **Activity Bar** (λ icon) | Sidebar with **Get Started** actions and **Examples** tree |
-| **Panel** → Miranda Lint | Lint issues for the active `.m` file; click to jump to line |
-| **Status Bar** (right) | Shows `Miranda` or `$(error) N $(warning) M` when editing `.m` files |
-| **Editor title bar** | Rocket (Start Tutorial), book (Walkthrough), play (Run Linter) |
-| **Command Palette** | `Miranda: Start Tutorial` opens an example and the walkthrough together |
-
-**Context menus** ([VS Code guidelines](https://code.visualstudio.com/api/ux-guidelines/context-menus)) — grouped under a **Miranda** submenu, shown only when relevant:
+**Context menus** ([guidelines](https://code.visualstudio.com/api/ux-guidelines/context-menus)) — grouped under a **Miranda** submenu, shown only when relevant:
 
 | Location | When shown | Actions |
 |----------|------------|---------|
 | Editor right-click | `.m` file open | Learn (tutorial, walkthrough, guide) and Lint (run, panel, settings) |
 | Explorer right-click | `.m` file selected | Run linter on file, lint panel, walkthrough, settings |
-| Get Started tree | guide item selected | Tutorial, walkthrough, guide, settings |
+| Concepts tree | concept selected | Show in Concept Guide panel |
 | Examples tree | example file selected | Open example, run linter |
 | Lint panel | issue selected | Go to issue |
 
@@ -119,7 +166,9 @@ code --install-extension miranda-0.1.0.vsix
 ### Usage
 Open Miranda `.m` files. Syntax highlighting is applied automatically and the linter runs on type or save.
 
-Manual command: `Miranda: Run Linter`
+- **Command Palette:** `Miranda: Run Linter`
+- **Sidebar:** click the λ icon → **Concepts** or **Examples**
+- **Panel:** **Concept Guide** for explanations, **Lint Issues** for diagnostics
 
 ## Configuration
 
@@ -143,30 +192,33 @@ You can also use `.mirandarc.json` in the project root as a configuration refere
 Unit test suite with **Mocha + Chai** (linter and provider) and **vscode-tmgrammar-test** (syntax highlighting):
 
 ```bash
-npm test              # linter, config, diagnostics, provider, constants, examples
+npm test              # linter, config, diagnostics, provider, constants, examples, views
 npm run test:grammar  # 6 tests: TextMate grammar
-npm run test:all      # runs both suites
+npm run test:all      # runs both suites (122 tests)
 ```
 
 ### Quick development (install + test + open VS Code)
 
 ```bash
 chmod +x scripts/dev.sh   # first time only
-npm run dev
+npm run dev               # install, test, open extension dev host
+npm run guide             # open dev host with walkthrough (skip tests)
 ```
 
 The `scripts/dev.sh` script:
 1. Runs `npm install`
-2. Runs `npm run test:all`
+2. Runs `npm run test:all` (unless `--skip-tests`)
 3. Opens VS Code or Cursor with `--extensionDevelopmentPath` and `examples/fib.m`
 
 Useful options:
 
 ```bash
 ./scripts/dev.sh --example examples/quicksort.m
-./scripts/dev.sh --skip-tests          # compile and open only
-./scripts/dev.sh --skip-launch         # install and test only
-./scripts/dev.sh --install-vsix        # also package and install the .vsix
+./scripts/dev.sh --walkthrough              # also open Getting Started walkthrough
+./scripts/dev.sh --walkthrough --example examples/01-basic-ideas.m
+./scripts/dev.sh --skip-tests               # compile and open only
+./scripts/dev.sh --skip-launch              # install and test only
+./scripts/dev.sh --install-vsix             # also package and install the .vsix
 ```
 
 ### Coverage
@@ -175,7 +227,7 @@ Useful options:
 |-------|-------|------------------|
 | Linter | `src/test/linter.test.ts` | All 13 rules + `examples/` fixtures |
 | Examples | `src/test/examples.test.ts` | All `examples/**/*.m` lint-clean (no errors) |
-| Views | `src/test/views/*.test.ts` | Example manifest and lint panel formatting |
+| Views | `src/test/views/*.test.ts` | Concepts catalog, examples manifest, lint panel formatting |
 | Config | `src/test/config.test.ts` | `buildLintConfig` and overrides |
 | Diagnostics | `src/test/diagnostics.test.ts` | Severity mapping and ranges |
 | Provider | `src/test/provider.test.ts` | Diagnostic publishing in VS Code |

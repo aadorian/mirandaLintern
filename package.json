@@ -20,9 +20,10 @@
   "activationEvents": [
     "onStartupFinished",
     "onLanguage:miranda",
-    "onView:miranda.guide",
+    "onView:miranda.concepts",
     "onView:miranda.examples",
     "onView:miranda.lint",
+    "onView:miranda.conceptDetail",
     "onCommand:miranda.runLint",
     "onCommand:miranda.startTutorial",
     "onCommand:miranda.openBasicExample",
@@ -38,6 +39,9 @@
     "onCommand:miranda.openSelectedExample",
     "onCommand:miranda.runLintOnSelectedExample",
     "onCommand:miranda.goToSelectedLintIssue",
+    "onCommand:miranda.showSelectedConcept",
+    "onCommand:miranda.showConcept",
+    "onCommand:miranda.showConceptPanel",
     "onCommand:miranda.goToLintIssue"
   ],
   "main": "./out/extension.js",
@@ -278,6 +282,15 @@
         "title": "Miranda: Go to Selected Lint Issue"
       },
       {
+        "command": "miranda.showSelectedConcept",
+        "title": "Miranda: Show Selected Concept in Panel"
+      },
+      {
+        "command": "miranda.showConceptPanel",
+        "title": "Miranda: Show Concept Guide Panel",
+        "icon": "$(book)"
+      },
+      {
         "command": "miranda.showLintPanel",
         "title": "Miranda: Show Lint Panel",
         "icon": "$(list-unordered)"
@@ -308,29 +321,46 @@
     "views": {
       "miranda": [
         {
-          "id": "miranda.guide",
-          "name": "Get Started"
+          "id": "miranda.concepts",
+          "name": "Concepts",
+          "icon": "$(lightbulb)"
         },
         {
           "id": "miranda.examples",
-          "name": "Examples"
+          "name": "Examples",
+          "icon": "$(file-code)"
         }
       ],
       "panel": [
         {
+          "type": "webview",
+          "id": "miranda.conceptDetail",
+          "name": "Concept Guide",
+          "icon": "$(book)"
+        },
+        {
           "id": "miranda.lint",
-          "name": "Miranda Lint"
+          "name": "Lint Issues",
+          "icon": "$(warning)"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "miranda.guide",
-        "contents": "New to Miranda?\n[Start Tutorial](command:miranda.startTutorial)\n[Open Walkthrough](command:miranda.openWalkthrough)"
+        "view": "miranda.concepts",
+        "contents": "Learn Miranda through 12 structured concepts from David Turner overview.\n[Start Tutorial](command:miranda.startTutorial)\n[Open Walkthrough](command:miranda.openWalkthrough)\n[Show Concept Panel](command:miranda.showConceptPanel)"
+      },
+      {
+        "view": "miranda.examples",
+        "contents": "Runnable tutorial scripts ship with this extension.\n[Open Basic Ideas](command:miranda.openBasicExample)"
+      },
+      {
+        "view": "miranda.conceptDetail",
+        "contents": "Select a concept in the sidebar to read a detailed explanation here."
       },
       {
         "view": "miranda.lint",
-        "contents": "Open a Miranda `.m` file to see lint issues here.\n[Run Linter](command:miranda.runLint)"
+        "contents": "Lint diagnostics for the active `.m` file appear here.\n[Run Linter](command:miranda.runLint)\n[Open Settings](command:miranda.openLintSettings)"
       }
     ],
     "submenus": [
@@ -343,7 +373,7 @@
         "label": "Miranda"
       },
       {
-        "id": "miranda.guideMenu",
+        "id": "miranda.conceptMenu",
         "label": "Miranda"
       },
       {
@@ -385,9 +415,14 @@
       ],
       "view/item/context": [
         {
-          "submenu": "miranda.guideMenu",
-          "when": "view == miranda.guide && viewItem == mirandaGuide",
+          "submenu": "miranda.conceptMenu",
+          "when": "view == miranda.concepts && viewItem == mirandaConceptAction",
           "group": "inline"
+        },
+        {
+          "command": "miranda.showSelectedConcept",
+          "when": "view == miranda.concepts && viewItem =~ /^mirandaConcept:/",
+          "group": "miranda@1"
         },
         {
           "submenu": "miranda.exampleMenu",
@@ -444,7 +479,7 @@
           "group": "2_learn@2"
         }
       ],
-      "miranda.guideMenu": [
+      "miranda.conceptMenu": [
         {
           "command": "miranda.startTutorial",
           "group": "1_learn@1"
@@ -454,7 +489,7 @@
           "group": "1_learn@2"
         },
         {
-          "command": "miranda.openLanguageGuide",
+          "command": "miranda.showConceptPanel",
           "group": "1_learn@3"
         },
         {
@@ -483,7 +518,14 @@
           "command": "miranda.runLint"
         },
         {
+          "command": "miranda.showConceptPanel"
+        },
+        {
           "command": "miranda.showLintPanel"
+        },
+        {
+          "command": "miranda.showSelectedConcept",
+          "when": "false"
         },
         {
           "command": "miranda.showMirandaSidebar"
@@ -531,12 +573,12 @@
       "view/title": [
         {
           "command": "miranda.startTutorial",
-          "when": "view == miranda.guide",
+          "when": "view == miranda.concepts",
           "group": "navigation@1"
         },
         {
-          "command": "miranda.openWalkthrough",
-          "when": "view == miranda.guide",
+          "command": "miranda.showConceptPanel",
+          "when": "view == miranda.concepts",
           "group": "navigation@2"
         },
         {

@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
+import { ConceptDetailPanelProvider } from "./conceptDetailPanel";
+import { ConceptsTreeProvider } from "./conceptsTree";
 import { ExamplesTreeNode, ExamplesTreeProvider } from "./examplesTreeProvider";
-import { GuideTreeProvider } from "./guideTree";
 import { LintIssueNode, LintPanelProvider } from "./lintPanel";
 
 export async function openExtensionFile(
@@ -16,15 +17,16 @@ export function registerViews(
   lintDocument: (document: vscode.TextDocument) => void
 ): {
   lintPanel: LintPanelProvider;
-  lintTreeView: vscode.TreeView<LintIssueNode>;
+  conceptDetail: ConceptDetailPanelProvider;
 } {
-  const guideProvider = new GuideTreeProvider();
+  const conceptsProvider = new ConceptsTreeProvider();
   const examplesProvider = new ExamplesTreeProvider(context.extensionUri);
   const lintPanel = new LintPanelProvider();
+  const conceptDetail = new ConceptDetailPanelProvider();
 
-  const guideTreeView = vscode.window.createTreeView("miranda.guide", {
-    treeDataProvider: guideProvider,
-    showCollapseAll: false,
+  const conceptsTreeView = vscode.window.createTreeView("miranda.concepts", {
+    treeDataProvider: conceptsProvider,
+    showCollapseAll: true,
   });
 
   const examplesTreeView = vscode.window.createTreeView("miranda.examples", {
@@ -36,6 +38,13 @@ export function registerViews(
     treeDataProvider: lintPanel,
     showCollapseAll: false,
   });
+
+  context.subscriptions.push(
+    vscode.window.registerWebviewViewProvider("miranda.conceptDetail", conceptDetail),
+    conceptsTreeView,
+    examplesTreeView,
+    lintTreeView
+  );
 
   const openSelectedExample = async (): Promise<void> => {
     const selected = examplesTreeView.selection[0] as ExamplesTreeNode | undefined;
@@ -68,12 +77,32 @@ export function registerViews(
     );
   };
 
+  const showConcept = async (conceptId: string): Promise<void> => {
+    conceptDetail.showConcept(conceptId);
+    await vscode.commands.executeCommand("miranda.conceptDetail.focus");
+
+    const concept = conceptsProvider.getConcept(conceptId);
+    if (concept?.examplePath) {
+      await openExtensionFile(context, concept.examplePath);
+    }
+  };
+
+  const showSelectedConcept = async (): Promise<void> => {
+    const selected = conceptsTreeView.selection[0];
+    if (!selected || selected.kind !== "topic") {
+      return;
+    }
+    await showConcept(selected.concept.id);
+  };
+
   context.subscriptions.push(
-    guideTreeView,
-    examplesTreeView,
-    lintTreeView,
     vscode.commands.registerCommand("miranda.openExampleFile", async (relativePath: string) => {
       await openExtensionFile(context, relativePath);
+    }),
+    vscode.commands.registerCommand("miranda.showConcept", showConcept),
+    vscode.commands.registerCommand("miranda.showSelectedConcept", showSelectedConcept),
+    vscode.commands.registerCommand("miranda.showConceptPanel", async () => {
+      await vscode.commands.executeCommand("miranda.conceptDetail.focus");
     }),
     vscode.commands.registerCommand("miranda.openSelectedExample", openSelectedExample),
     vscode.commands.registerCommand("miranda.runLintOnSelectedExample", runLintOnSelectedExample),
@@ -96,5 +125,5 @@ export function registerViews(
     })
   );
 
-  return { lintPanel, lintTreeView };
+  return { lintPanel, conceptDetail };
 }
