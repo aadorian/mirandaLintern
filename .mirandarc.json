@@ -1,0 +1,19 @@
+{
+  "maxLineLength": 80,
+  "indentSize": 1,
+  "rules": {
+    "noTrailingSpaces": "warn",
+    "requireFinalNewline": "warn",
+    "noTabs": "warn",
+    "consistentIndent": "error",
+    "noDuplicateDefinitions": "error",
+    "noUndefinedIdentifier": "warn",
+    "noUnusedDefinitions": "warn",
+    "booleanLiteralCase": "error",
+    "commentStyle": "warn",
+    "noSingleCharNames": "off",
+    "maxLineLength": "warn",
+    "unmatchedQuotes": "error",
+    "reservedWordAsIdentifier": "error"
+  }
+}

@@ -1,0 +1,237 @@
+{
+  "name": "miranda",
+  "displayName": "Miranda Language Support",
+  "description": "Syntax highlighting and ESLint-style code quality linting for the Miranda functional programming language",
+  "version": "0.1.0",
+  "publisher": "miranda-lang",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters"
+  ],
+  "keywords": [
+    "miranda",
+    "functional",
+    "haskell",
+    "lint"
+  ],
+  "activationEvents": [
+    "onLanguage:miranda"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "miranda",
+        "aliases": [
+          "Miranda",
+          "miranda"
+        ],
+        "extensions": [
+          ".m"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "miranda",
+        "scopeName": "source.miranda",
+        "path": "./syntaxes/miranda.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "title": "Miranda",
+      "properties": {
+        "miranda.lint.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Miranda linting"
+        },
+        "miranda.lint.run": {
+          "type": "string",
+          "enum": [
+            "onType",
+            "onSave",
+            "onTypeAndSave"
+          ],
+          "default": "onTypeAndSave",
+          "description": "When to run the Miranda linter"
+        },
+        "miranda.lint.maxLineLength": {
+          "type": "number",
+          "default": 80,
+          "description": "Maximum allowed line length"
+        },
+        "miranda.lint.indentSize": {
+          "type": "number",
+          "default": 1,
+          "description": "Expected indentation step (in spaces) for the offside rule"
+        },
+        "miranda.lint.rules.noTrailingSpaces": {
+          "type": "string",
+          "enum": [
+            "off",
+            "warn",
+            "error"
+          ],
+          "default": "warn",
+          "description": "Disallow trailing whitespace"
+        },
+        "miranda.lint.rules.requireFinalNewline": {
+          "type": "string",
+          "enum": [
+            "off",
+            "warn",
+            "error"
+          ],
+          "default": "warn",
+          "description": "Require newline at end of file"
+        },
+        "miranda.lint.rules.noTabs": {
+          "type": "string",
+          "enum": [
+            "off",
+            "warn",
+            "error"
+          ],
+          "default": "warn",
+          "description": "Disallow tab characters"
+        },
+        "miranda.lint.rules.consistentIndent": {
+          "type": "string",
+          "enum": [
+            "off",
+            "warn",
+            "error"
+          ],
+          "default": "error",
+          "description": "Enforce consistent indentation for where/offside blocks"
+        },
+        "miranda.lint.rules.noDuplicateDefinitions": {
+          "type": "string",
+          "enum": [
+            "off",
+            "warn",
+            "error"
+          ],
+          "default": "error",
+          "description": "Disallow duplicate top-level definitions"
+        },
+        "miranda.lint.rules.noUndefinedIdentifier": {
+          "type": "string",
+          "enum": [
+            "off",
+            "warn",
+            "error"
+          ],
+          "default": "warn",
+          "description": "Warn on identifiers not defined in scope or standard library"
+        },
+        "miranda.lint.rules.noUnusedDefinitions": {
+          "type": "string",
+          "enum": [
+            "off",
+            "warn",
+            "error"
+          ],
+          "default": "warn",
+          "description": "Warn on top-level definitions that are never referenced"
+        },
+        "miranda.lint.rules.booleanLiteralCase": {
+          "type": "string",
+          "enum": [
+            "off",
+            "warn",
+            "error"
+          ],
+          "default": "error",
+          "description": "Require True/False (capitalized) boolean literals"
+        },
+        "miranda.lint.rules.commentStyle": {
+          "type": "string",
+          "enum": [
+            "off",
+            "warn",
+            "error"
+          ],
+          "default": "warn",
+          "description": "Require || for comments instead of other styles"
+        },
+        "miranda.lint.rules.noSingleCharNames": {
+          "type": "string",
+          "enum": [
+            "off",
+            "warn",
+            "error"
+          ],
+          "default": "off",
+          "description": "Discourage single-character identifiers except common ones (x, y, n, f, g, a, b)"
+        },
+        "miranda.lint.rules.maxLineLength": {
+          "type": "string",
+          "enum": [
+            "off",
+            "warn",
+            "error"
+          ],
+          "default": "warn",
+          "description": "Enforce maximum line length"
+        },
+        "miranda.lint.rules.unmatchedQuotes": {
+          "type": "string",
+          "enum": [
+            "off",
+            "warn",
+            "error"
+          ],
+          "default": "error",
+          "description": "Detect unmatched string or character quotes"
+        },
+        "miranda.lint.rules.reservedWordAsIdentifier": {
+          "type": "string",
+          "enum": [
+            "off",
+            "warn",
+            "error"
+          ],
+          "default": "error",
+          "description": "Disallow using reserved words as identifiers"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "miranda.runLint",
+        "title": "Miranda: Run Linter"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "test": "npm run compile && tsc -p tsconfig.test.json && mocha",
+    "test:grammar": "vscode-tmgrammar-test -g syntaxes/miranda.tmLanguage.json 'src/test/grammar/**/*.test.m'",
+    "test:all": "npm test && npm run test:grammar",
+    "dev": "bash scripts/dev.sh",
+    "start": "bash scripts/dev.sh"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "chai": "^4.4.1",
+    "mocha": "^10.3.0",
+    "mock-require": "^3.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "vscode-oniguruma": "^1.7.0",
+    "vscode-textmate": "^9.0.0",
+    "vscode-tmgrammar-test": "^0.1.3"
+  }
+}

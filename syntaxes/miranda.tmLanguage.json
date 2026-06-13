@@ -1,0 +1,246 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Miranda",
+  "scopeName": "source.miranda",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#directives" },
+    { "include": "#strings" },
+    { "include": "#chars" },
+    { "include": "#numbers" },
+    { "include": "#type-declarations" },
+    { "include": "#list-comprehension" },
+    { "include": "#keywords" },
+    { "include": "#constants" },
+    { "include": "#operators" },
+    { "include": "#constructors" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-pipe.miranda",
+          "match": "\\|\\|.*$"
+        }
+      ]
+    },
+    "directives": {
+      "patterns": [
+        {
+          "name": "keyword.control.directive.miranda",
+          "match": "^\\s*%\\s*(begin|bnf|export|free|include|insert|lex|list|nolist)\\b",
+          "captures": {
+            "1": { "name": "keyword.control.directive.name.miranda" }
+          }
+        },
+        {
+          "name": "keyword.control.directive.miranda",
+          "match": "^\\s*%.*$"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.miranda",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.miranda",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "chars": {
+      "patterns": [
+        {
+          "name": "string.quoted.single.miranda",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.miranda",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.scientific.miranda",
+          "match": "(?<![\\w'])\\d+(?:\\.\\d+)?[eE][+-]?\\d+(?![\\w'])"
+        },
+        {
+          "name": "constant.numeric.float.miranda",
+          "match": "(?<![\\w'])\\d+\\.\\d+(?![\\w'])"
+        },
+        {
+          "name": "constant.numeric.integer.miranda",
+          "match": "(?<![\\w'])\\d+(?![\\w'])"
+        }
+      ]
+    },
+    "type-declarations": {
+      "patterns": [
+        {
+          "name": "keyword.operator.type.adt.miranda",
+          "match": "::="
+        },
+        {
+          "name": "keyword.operator.type.synonym.miranda",
+          "match": "=="
+        },
+        {
+          "name": "keyword.operator.type.signature.miranda",
+          "match": "::"
+        },
+        {
+          "name": "storage.type.miranda",
+          "match": "\\b(num|char|bool)\\b"
+        },
+        {
+          "name": "storage.type.variable.miranda",
+          "match": "\\*{1,6}"
+        }
+      ]
+    },
+    "list-comprehension": {
+      "patterns": [
+        {
+          "name": "meta.comprehension.miranda",
+          "begin": "\\[",
+          "end": "\\]",
+          "patterns": [
+            { "include": "#comments" },
+            { "include": "#strings" },
+            { "include": "#chars" },
+            { "include": "#numbers" },
+            { "include": "#keywords" },
+            { "include": "#constants" },
+            { "include": "#operators" },
+            { "include": "#constructors" },
+            { "include": "#identifiers" },
+            {
+              "name": "keyword.operator.comprehension.generator.miranda",
+              "match": "<-"
+            },
+            {
+              "name": "keyword.operator.comprehension.filter.miranda",
+              "match": ";"
+            },
+            {
+              "name": "keyword.operator.comprehension.separator.miranda",
+              "match": "\\|"
+            }
+          ]
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.conditional.miranda",
+          "match": "\\b(if|otherwise)\\b"
+        },
+        {
+          "name": "keyword.other.where.miranda",
+          "match": "\\bwhere\\b"
+        },
+        {
+          "name": "keyword.declaration.abstype.miranda",
+          "match": "\\b(abstype|with|type)\\b"
+        },
+        {
+          "name": "keyword.operator.word.miranda",
+          "match": "\\b(div|mod)\\b"
+        },
+        {
+          "name": "keyword.other.io.miranda",
+          "match": "\\b(show|readvals)\\b"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.boolean.miranda",
+          "match": "\\b(True|False)\\b"
+        },
+        {
+          "name": "constant.language.builtin.miranda",
+          "match": "\\b(pi|e|tinynum|hugenum|undef)\\b"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.range.miranda",
+          "match": "\\.\\."
+        },
+        {
+          "name": "keyword.operator.list.miranda",
+          "match": "\\+\\+|--"
+        },
+        {
+          "name": "keyword.operator.comparison.miranda",
+          "match": "~=|<=|>=|<|>"
+        },
+        {
+          "name": "keyword.operator.logical.miranda",
+          "match": "\\\\/|\\/|~|&"
+        },
+        {
+          "name": "keyword.operator.arithmetic.miranda",
+          "match": "\\^|\\+|\\-|\\*|/"
+        },
+        {
+          "name": "keyword.operator.cons.miranda",
+          "match": ":"
+        },
+        {
+          "name": "keyword.operator.index.miranda",
+          "match": "!"
+        },
+        {
+          "name": "keyword.operator.length.miranda",
+          "match": "#"
+        },
+        {
+          "name": "keyword.operator.compose.miranda",
+          "match": "\\."
+        },
+        {
+          "name": "keyword.operator.assignment.miranda",
+          "match": "="
+        },
+        {
+          "name": "keyword.operator.infix.miranda",
+          "match": "\\$"
+        }
+      ]
+    },
+    "constructors": {
+      "patterns": [
+        {
+          "name": "entity.name.type.constructor.miranda",
+          "match": "\\b[A-Z][A-Za-z0-9_']*\\b"
+        }
+      ]
+    },
+    "identifiers": {
+      "patterns": [
+        {
+          "name": "entity.name.function.miranda",
+          "match": "\\b[a-z_][A-Za-z0-9_']*\\b"
+        }
+      ]
+    }
+  }
+}
