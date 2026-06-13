@@ -33,6 +33,7 @@ function createMockDocument(source: string, languageId = "miranda"): MockTextDoc
 describe("MirandaLintProvider", () => {
   let mockCollection: MockDiagnosticCollection;
   let changeEmitter: EventEmitter;
+  let saveEmitter: EventEmitter;
   let workspaceConfig: Record<string, unknown>;
   let MirandaLintProvider: typeof import("../linter/provider").MirandaLintProvider;
 
@@ -50,6 +51,7 @@ describe("MirandaLintProvider", () => {
     };
 
     changeEmitter = new EventEmitter();
+    saveEmitter = new EventEmitter();
 
     workspaceConfig = {
       enable: true,
@@ -84,7 +86,10 @@ describe("MirandaLintProvider", () => {
           changeEmitter.on("change", cb);
           return { dispose() {} };
         },
-        onDidSaveTextDocument: () => ({ dispose() {} }),
+        onDidSaveTextDocument: (cb: (doc: MockTextDocument) => void) => {
+          saveEmitter.on("save", cb);
+          return { dispose() {} };
+        },
         onDidOpenTextDocument: () => ({ dispose() {} }),
         onDidCloseTextDocument: () => ({ dispose() {} }),
         textDocuments: [] as MockTextDocument[],
@@ -159,6 +164,46 @@ describe("MirandaLintProvider", () => {
     await new Promise((resolve) => setTimeout(resolve, 350));
 
     expect(mockCollection.setCalls).to.be.empty;
+    provider.dispose();
+  });
+
+  it("publishes diagnostics when a miranda document is saved", () => {
+    workspaceConfig["rules.booleanLiteralCase"] = "error";
+    const provider = new MirandaLintProvider();
+    const doc = createMockDocument("flag = true\n");
+
+    provider.lintDocument(doc as never);
+
+    expect(mockCollection.setCalls).to.have.lengthOf(1);
+    const diagnostics = mockCollection.setCalls[0].diagnostics as Array<{ message: string }>;
+    expect(diagnostics.some((d) => d.message.includes("boolean-literal-case"))).to.be.true;
+    provider.dispose();
+  });
+
+  it("publishes an empty diagnostic set for clean code", () => {
+    workspaceConfig["rules.booleanLiteralCase"] = "off";
+    workspaceConfig["rules.requireFinalNewline"] = "off";
+    workspaceConfig["rules.noTrailingSpaces"] = "off";
+    workspaceConfig["rules.noUnusedDefinitions"] = "off";
+
+    const provider = new MirandaLintProvider();
+    const doc = createMockDocument("fib n = n + 1\n");
+
+    provider.lintDocument(doc as never);
+
+    expect(mockCollection.setCalls).to.have.lengthOf(1);
+    expect(mockCollection.setCalls[0].diagnostics).to.be.empty;
+    provider.dispose();
+  });
+
+  it("lints miranda documents on save when run mode includes onSave", () => {
+    workspaceConfig.run = "onSave";
+    const provider = new MirandaLintProvider();
+    const doc = createMockDocument("x = 1  \n");
+
+    saveEmitter.emit("save", doc);
+
+    expect(mockCollection.setCalls).to.have.lengthOf(1);
     provider.dispose();
   });
 });

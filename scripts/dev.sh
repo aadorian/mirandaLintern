@@ -9,6 +9,7 @@ cd "$ROOT"
 SKIP_TESTS=false
 SKIP_LAUNCH=false
 INSTALL_VSIX=false
+OPEN_WALKTHROUGH=false
 EXAMPLE_FILE="${ROOT}/examples/fib.m"
 
 usage() {
@@ -19,6 +20,7 @@ Opciones:
   --skip-tests      Omite npm run test:all
   --skip-launch     Solo instala, compila y prueba (no abre el editor)
   --install-vsix    Empaqueta e instala la extensión (.vsix) además del modo dev
+  --walkthrough     Abre el walkthrough "Get Started with Miranda" al iniciar
   --example <path>  Archivo .m a abrir (por defecto: examples/fib.m)
   -h, --help        Muestra esta ayuda
 
@@ -35,6 +37,7 @@ while [[ $# -gt 0 ]]; do
     --skip-tests) SKIP_TESTS=true ;;
     --skip-launch) SKIP_LAUNCH=true ;;
     --install-vsix) INSTALL_VSIX=true ;;
+    --walkthrough) OPEN_WALKTHROUGH=true ;;
     --example)
       shift
       EXAMPLE_FILE="${1:?Falta ruta tras --example}"
@@ -111,6 +114,11 @@ fi
 log "Abriendo ${EDITOR_CLI} en modo Extension Development Host"
 log "Extensión: ${ROOT}"
 log "Archivo: ${EXAMPLE_FILE}"
+
+if [[ "$OPEN_WALKTHROUGH" == true ]]; then
+  export MIRANDA_OPEN_WALKTHROUGH=1
+  log "Walkthrough: Get Started with Miranda (se abrirá al activar la extensión)"
+fi
 
 "$EDITOR_CLI" --extensionDevelopmentPath="$ROOT" "$EXAMPLE_FILE" >/dev/null 2>&1 &
 

@@ -43,4 +43,25 @@ describe("buildLintConfig", () => {
     expect(config.rules.noUndefinedIdentifier).to.equal("off");
     expect(config.rules.booleanLiteralCase).to.equal(DEFAULT_LINT_CONFIG.rules.booleanLiteralCase);
   });
+
+  it("returns all 13 rule keys from defaults", () => {
+    const config = buildLintConfig({
+      get: <T>(_key: string, defaultValue: T) => defaultValue,
+    });
+    expect(Object.keys(config.rules)).to.have.lengthOf(13);
+  });
+
+  it("allows turning every rule off individually", () => {
+    const config = buildLintConfig({
+      get: <T>(key: string, defaultValue: T) => {
+        if (key.startsWith("rules.")) {
+          return "off" as T;
+        }
+        return defaultValue;
+      },
+    });
+    for (const severity of Object.values(config.rules)) {
+      expect(severity).to.equal("off");
+    }
+  });
 });

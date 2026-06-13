@@ -1,5 +1,5 @@
-|| Fibonacci - ejemplo del repositorio oficial Miranda
-|| https://github.com/ncihnegn/miranda
+|| Fibonacci — pattern matching example from the official Miranda repo
+take 0 x = []
+take (n+1) [] = []
+take (n+1) (a:x) = a : take n x
 
-fib n = 1, if n<=2
-      = fib(n-1) + fib(n-2), otherwise

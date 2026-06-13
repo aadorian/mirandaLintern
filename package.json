@@ -18,7 +18,16 @@
     "lint"
   ],
   "activationEvents": [
-    "onLanguage:miranda"
+    "onStartupFinished",
+    "onLanguage:miranda",
+    "onCommand:miranda.runLint",
+    "onCommand:miranda.startTutorial",
+    "onCommand:miranda.openBasicExample",
+    "onCommand:miranda.openComprehensionsExample",
+    "onCommand:miranda.openFibExample",
+    "onCommand:miranda.openLanguageGuide",
+    "onCommand:miranda.openLintSettings",
+    "onCommand:miranda.openWalkthrough"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -204,8 +213,184 @@
     },
     "commands": [
       {
+        "command": "miranda.startTutorial",
+        "title": "Miranda: Start Tutorial",
+        "icon": "$(rocket)"
+      },
+      {
         "command": "miranda.runLint",
-        "title": "Miranda: Run Linter"
+        "title": "Miranda: Run Linter",
+        "icon": "$(debug-start)"
+      },
+      {
+        "command": "miranda.openWalkthrough",
+        "title": "Miranda: Open Walkthrough",
+        "icon": "$(book)"
+      },
+      {
+        "command": "miranda.openBasicExample",
+        "title": "Miranda: Open Basic Ideas Example"
+      },
+      {
+        "command": "miranda.openComprehensionsExample",
+        "title": "Miranda: Open List Comprehensions Example"
+      },
+      {
+        "command": "miranda.openFibExample",
+        "title": "Miranda: Open Fibonacci Example"
+      },
+      {
+        "command": "miranda.openLanguageGuide",
+        "title": "Miranda: Open Language Guide"
+      },
+      {
+        "command": "miranda.openLintSettings",
+        "title": "Miranda: Open Lint Settings"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "miranda.startTutorial",
+          "when": "resourceLangId == miranda",
+          "group": "navigation@1"
+        },
+        {
+          "command": "miranda.openWalkthrough",
+          "when": "resourceLangId == miranda",
+          "group": "navigation@2"
+        },
+        {
+          "command": "miranda.runLint",
+          "when": "resourceLangId == miranda",
+          "group": "navigation@3"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "miranda.startTutorial",
+          "when": "resourceLangId == miranda",
+          "group": "miranda@1"
+        },
+        {
+          "command": "miranda.openWalkthrough",
+          "when": "resourceLangId == miranda",
+          "group": "miranda@2"
+        },
+        {
+          "command": "miranda.runLint",
+          "when": "resourceLangId == miranda",
+          "group": "miranda@3"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "miranda.startTutorial"
+        },
+        {
+          "command": "miranda.openWalkthrough"
+        },
+        {
+          "command": "miranda.runLint"
+        },
+        {
+          "command": "miranda.openBasicExample"
+        },
+        {
+          "command": "miranda.openComprehensionsExample"
+        },
+        {
+          "command": "miranda.openFibExample"
+        },
+        {
+          "command": "miranda.openLanguageGuide"
+        },
+        {
+          "command": "miranda.openLintSettings"
+        }
+      ]
+    },
+    "walkthroughs": [
+      {
+        "id": "miranda-getting-started",
+        "title": "Get Started with Miranda",
+        "description": "Learn Miranda syntax, explore tutorial examples, and configure ESLint-style linting in VS Code.",
+        "steps": [
+          {
+            "id": "open-basic-example",
+            "title": "Open your first Miranda script",
+            "description": "Miranda programs are **scripts** — collections of equations in `.m` files. Function application uses juxtaposition: `sq x` not `sq(x)`.\n\n[Open Basic Ideas](command:miranda.openBasicExample)",
+            "media": {
+              "svg": "media/walkthrough/welcome.svg",
+              "altText": "Miranda script with equations and list operations"
+            },
+            "completionEvents": [
+              "onCommand:miranda.openBasicExample"
+            ]
+          },
+          {
+            "id": "explore-syntax",
+            "title": "Explore syntax highlighting",
+            "description": "This extension highlights comments (`||`), directives (`%include`), keywords (`where`, `if`), operators (`::`, `<-`, `++`), list comprehensions, and type declarations.\n\n[Open List Comprehensions](command:miranda.openComprehensionsExample)",
+            "media": {
+              "svg": "media/walkthrough/syntax.svg",
+              "altText": "Miranda quicksort with highlighted keywords and operators"
+            },
+            "completionEvents": [
+              "onCommand:miranda.openComprehensionsExample"
+            ]
+          },
+          {
+            "id": "run-linter",
+            "title": "Run the Miranda linter",
+            "description": "Open any `.m` file and run the linter to check 13 ESLint-style rules — boolean literals, indentation, undefined identifiers, and more.\n\n[Run Linter](command:miranda.runLint)",
+            "media": {
+              "svg": "media/walkthrough/linter.svg",
+              "altText": "Linter diagnostics for boolean literal case and final newline"
+            },
+            "completionEvents": [
+              "onCommand:miranda.runLint"
+            ]
+          },
+          {
+            "id": "pattern-matching",
+            "title": "Try pattern matching",
+            "description": "Miranda functions can be defined by **multiple equations** with different patterns — on numbers, lists `(a:x)`, and tuples.\n\n[Open Fibonacci Example](command:miranda.openFibExample)",
+            "media": {
+              "svg": "media/walkthrough/patterns.svg",
+              "altText": "take function defined with pattern matching on lists"
+            },
+            "completionEvents": [
+              "onCommand:miranda.openFibExample"
+            ]
+          },
+          {
+            "id": "configure-lint",
+            "title": "Configure lint rules",
+            "description": "Adjust when linting runs and set per-rule severity (`off`, `warn`, `error`) under **Settings › Miranda**.\n\n[Open Lint Settings](command:miranda.openLintSettings)",
+            "media": {
+              "svg": "media/walkthrough/settings.svg",
+              "altText": "Miranda lint settings in VS Code"
+            },
+            "completionEvents": [
+              "onSettingChanged:miranda.lint.enable",
+              "onSettingChanged:miranda.lint.run",
+              "onSettingChanged:miranda.lint.rules.booleanLiteralCase"
+            ]
+          },
+          {
+            "id": "language-guide",
+            "title": "Read the language guide",
+            "description": "Continue with the full tutorial adapted from David Turner's overview — guarded equations, lazy lists, algebraic types, and more.\n\n[Open Language Guide](command:miranda.openLanguageGuide)\n\n[Read Turner Overview](https://www.cs.kent.ac.uk/people/staff/dat/miranda/Overview.html)",
+            "media": {
+              "markdown": "media/walkthrough/language-guide.md"
+            },
+            "completionEvents": [
+              "onCommand:miranda.openLanguageGuide",
+              "onLink:https://www.cs.kent.ac.uk/people/staff/dat/miranda/Overview.html"
+            ]
+          }
+        ]
       }
     ]
   },
@@ -218,6 +403,7 @@
     "test:grammar": "vscode-tmgrammar-test -g syntaxes/miranda.tmLanguage.json 'src/test/grammar/**/*.test.m'",
     "test:all": "npm test && npm run test:grammar",
     "dev": "bash scripts/dev.sh",
+    "guide": "bash scripts/dev.sh --walkthrough --skip-tests",
     "start": "bash scripts/dev.sh"
   },
   "devDependencies": {

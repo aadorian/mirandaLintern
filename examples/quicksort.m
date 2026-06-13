@@ -1,4 +1,4 @@
-|| Quicksort funcional - ejemplo del repositorio oficial Miranda
+|| Functional quicksort — list comprehension example from the official repo
 
 qsort [] = []
 qsort (a:x) = qsort [b | b<-x; b<=a] ++ [a] ++ qsort [b | b<-x; b>a]

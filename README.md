@@ -37,6 +37,56 @@ Configurable rules with severity `off` / `warn` / `error`:
 | `unmatched-quotes` | Unmatched quotes |
 | `reserved-word-as-identifier` | Reserved words used as identifiers |
 
+## Learn Miranda
+
+### Getting Started walkthrough
+
+After installing the extension, open the **Get Started with Miranda** walkthrough from the VS Code Getting Started page (or run **Help: Get Started**). It guides you through:
+
+1. Opening tutorial `.m` examples
+2. Syntax highlighting features
+3. Running the linter
+4. Pattern matching and list comprehensions
+5. Configuring lint rules
+6. The full language guide
+
+Walkthroughs follow the [VS Code UX guidelines](https://code.visualstudio.com/api/ux-guidelines/walkthroughs) with theme-aware SVG illustrations and actionable steps.
+
+**Quick access buttons** (when a `.m` file is open):
+
+- **Editor title bar** — rocket (Start Tutorial), book (Walkthrough), play (Run Linter)
+- **Status bar** — `Miranda Tutorial`, `Miranda Guide`, and `Run Miranda Lint`
+- **Command Palette** — `Miranda: Start Tutorial` opens an example and the walkthrough together
+
+### Written tutorial
+
+Step-by-step guide based on David Turner's [An Overview of Miranda](https://www.cs.kent.ac.uk/people/staff/dat/miranda/Overview.html):
+
+**[docs/walkthrough.md](docs/walkthrough.md)**
+
+Open any example in the extension dev host:
+
+```bash
+./scripts/dev.sh --example examples/01-basic-ideas.m
+```
+
+| File | Topic |
+|------|-------|
+| `examples/01-basic-ideas.m` | Scripts, lists, tuples, `..` |
+| `examples/02-guarded-equations.m` | Guards, `where` blocks |
+| `examples/03-pattern-matching.m` | `fac`, `fib`, `take`/`drop` |
+| `examples/04-higher-order.m` | Currying, partial application, `foldr` |
+| `examples/05-list-comprehensions.m` | Comprehensions, quicksort, eight queens |
+| `examples/06-lazy-infinite-lists.m` | Lazy streams, sieve, Hamming numbers |
+| `examples/07-polymorphic-types.m` | `::` type annotations |
+| `examples/08-user-defined-types.m` | `::=` algebraic types |
+| `examples/09-type-synonyms.m` | `==` type synonyms |
+| `examples/10-abstract-data-types.m` | `abstype` stacks |
+| `examples/fib.m` | `take` (official repo) |
+| `examples/quicksort.m` | Quicksort (official repo) |
+| `examples/modules/matrix_pack.m` | `%free` parametrised package |
+| `examples/modules/use_matrix.m` | `%include` consumer |
+
 ## Installation
 
 ### Local development
@@ -79,7 +129,7 @@ You can also use `.mirandarc.json` in the project root as a configuration refere
 Unit test suite with **Mocha + Chai** (linter and provider) and **vscode-tmgrammar-test** (syntax highlighting):
 
 ```bash
-npm test              # 48 tests: linter, config, diagnostics, provider
+npm test              # linter, config, diagnostics, provider, constants, examples
 npm run test:grammar  # 6 tests: TextMate grammar
 npm run test:all      # runs both suites
 ```
@@ -110,6 +160,7 @@ Useful options:
 | Suite | Files | What it verifies |
 |-------|-------|------------------|
 | Linter | `src/test/linter.test.ts` | All 13 rules + `examples/` fixtures |
+| Examples | `src/test/examples.test.ts` | All `examples/**/*.m` lint-clean (no errors) |
 | Config | `src/test/config.test.ts` | `buildLintConfig` and overrides |
 | Diagnostics | `src/test/diagnostics.test.ts` | Severity mapping and ranges |
 | Provider | `src/test/provider.test.ts` | Diagnostic publishing in VS Code |
@@ -117,13 +168,11 @@ Useful options:
 
 ## Examples
 
-The `examples/` folder contains scripts from the official repository:
-- `fib.m` — Fibonacci numbers
-- `quicksort.m` — functional quicksort
+The `examples/` folder contains tutorial scripts adapted from [Turner's overview](https://www.cs.kent.ac.uk/people/staff/dat/miranda/Overview.html), plus samples from the official repository. See [docs/walkthrough.md](docs/walkthrough.md) for a guided tour.
 
 ## References
 
-- [Miranda on Wikipedia](https://en.wikipedia.org/wiki/Miranda_(programming_language))
+- [An Overview of Miranda](https://www.cs.kent.ac.uk/people/staff/dat/miranda/Overview.html) — David Turner, University of Kent
 - [miranda.org.uk](http://miranda.org.uk/)
 - [Operators and lexical notation](https://github.com/garrett-may/miranda-documentation/tree/master/syntax)
 

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" role="img" aria-label="Miranda script">
+  <rect width="400" height="240" fill="var(--vscode-editor-background, #1e1e1e)" rx="8"/>
+  <rect x="24" y="24" width="352" height="192" fill="var(--vscode-sideBar-background, #252526)" rx="6"/>
+  <text x="40" y="56" font-family="monospace" font-size="14" fill="var(--vscode-descriptionForeground, #9d9d9d)">|| Basic ideas</text>
+  <text x="40" y="84" font-family="monospace" font-size="14" fill="var(--vscode-symbol-keyword, #569cd6)">fac</text>
+  <text x="64" y="84" font-family="monospace" font-size="14" fill="var(--vscode-foreground, #cccccc)"> n = </text>
+  <text x="104" y="84" font-family="monospace" font-size="14" fill="var(--vscode-symbol-function, #dcdcaa)">product</text>
+  <text x="168" y="84" font-family="monospace" font-size="14" fill="var(--vscode-foreground, #cccccc)"> [1..n]</text>
+  <text x="40" y="112" font-family="monospace" font-size="14" fill="var(--vscode-symbol-keyword, #569cd6)">days</text>
+  <text x="72" y="112" font-family="monospace" font-size="14" fill="var(--vscode-foreground, #cccccc)"> = week_days </text>
+  <text x="200" y="112" font-family="monospace" font-size="14" fill="var(--vscode-symbol-operator, #d4d4d4)">++</text>
+  <text x="224" y="112" font-family="monospace" font-size="14" fill="var(--vscode-foreground, #cccccc)"> ["Sat","Sun"]</text>
+  <text x="40" y="148" font-family="monospace" font-size="13" fill="var(--vscode-descriptionForeground, #9d9d9d)">Scripts are collections of equations in .m files</text>
+</svg>
