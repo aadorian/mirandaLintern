@@ -17,6 +17,9 @@
     "haskell",
     "lint"
   ],
+  "miranda": {
+    "editorCli": "code-insiders"
+  },
   "activationEvents": [
     "onStartupFinished",
     "onLanguage:miranda",
@@ -685,9 +688,9 @@
     "test": "npm run compile && tsc -p tsconfig.test.json && mocha",
     "test:grammar": "vscode-tmgrammar-test -g syntaxes/miranda.tmLanguage.json 'src/test/grammar/**/*.test.m'",
     "test:all": "npm test && npm run test:grammar",
-    "dev": "bash scripts/dev.sh",
-    "guide": "bash scripts/dev.sh --walkthrough --skip-tests",
-    "start": "bash scripts/dev.sh"
+    "dev": "EDITOR_CLI=code-insiders bash scripts/dev.sh",
+    "guide": "EDITOR_CLI=code-insiders bash scripts/dev.sh --walkthrough --skip-tests",
+    "start": "EDITOR_CLI=code-insiders bash scripts/dev.sh"
   },
   "devDependencies": {
     "@types/chai": "^4.3.11",

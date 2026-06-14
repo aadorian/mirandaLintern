@@ -59,10 +59,14 @@ done
 log() { printf '\n▶ %s\n' "$1"; }
 
 find_editor_cli() {
-  if command -v cursor >/dev/null 2>&1; then
-    echo "cursor"
+  if [[ -n "${EDITOR_CLI:-}" ]] && command -v "$EDITOR_CLI" >/dev/null 2>&1; then
+    echo "$EDITOR_CLI"
+  elif command -v code-insiders >/dev/null 2>&1; then
+    echo "code-insiders"
   elif command -v code >/dev/null 2>&1; then
     echo "code"
+  elif command -v cursor >/dev/null 2>&1; then
+    echo "cursor"
   else
     return 1
   fi
@@ -88,7 +92,7 @@ if [[ "$INSTALL_VSIX" == true ]]; then
     exit 1
   fi
   EDITOR_CLI="$(find_editor_cli)" || {
-    echo "No se encontró 'code' ni 'cursor' en PATH para instalar el .vsix." >&2
+    echo "No se encontró 'code-insiders', 'code' ni 'cursor' en PATH para instalar el .vsix." >&2
     exit 1
   }
   log "Instalando extensión: ${VSIX_FILE}"
@@ -101,8 +105,8 @@ if [[ "$SKIP_LAUNCH" == true ]]; then
 fi
 
 EDITOR_CLI="$(find_editor_cli)" || {
-  echo "No se encontró 'code' ni 'cursor' en PATH." >&2
-  echo "Instala VS Code CLI: Command Palette → 'Shell Command: Install code command in PATH'" >&2
+  echo "No se encontró 'code-insiders', 'code' ni 'cursor' en PATH." >&2
+  echo "Instala VS Code Insiders CLI: Command Palette → 'Shell Command: Install 'code-insiders' command in PATH'" >&2
   exit 1
 }
 
