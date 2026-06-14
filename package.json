@@ -4,6 +4,11 @@
   "description": "Syntax highlighting and ESLint-style code quality linting for the Miranda functional programming language",
   "version": "0.1.0",
   "publisher": "miranda-lang",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aadorian/mirandaLintern.git"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -296,6 +301,13 @@
           "title": "Miranda",
           "icon": "media/icons/miranda.svg"
         }
+      ],
+      "panel": [
+        {
+          "id": "miranda-panel",
+          "title": "Miranda",
+          "icon": "media/icons/miranda.svg"
+        }
       ]
     },
     "views": {
@@ -311,7 +323,7 @@
           "icon": "$(file-code)"
         }
       ],
-      "panel": [
+      "miranda-panel": [
         {
           "type": "webview",
           "id": "miranda.conceptDetail",

@@ -11,3 +11,6 @@ vsc-extension-quickstart.md
 .nyc_output
 coverage
 scripts/**
+.cursor/**
+.mocharc.json
+tsconfig.test.json
