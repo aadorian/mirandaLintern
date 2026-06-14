@@ -160,7 +160,7 @@ Then in VS Code: **Run Extension** (F5) or install the `.vsix`:
 
 ```bash
 npx @vscode/vsce package
-code --install-extension miranda-0.1.0.vsix
+code --install-extension mirandaCode-0.1.0.vsix
 ```
 
 ### Usage
