@@ -21,31 +21,8 @@
     "editorCli": "code-insiders"
   },
   "activationEvents": [
-    "onStartupFinished",
-    "onLanguage:miranda",
-    "onView:miranda.concepts",
-    "onView:miranda.examples",
-    "onView:miranda.lint",
-    "onView:miranda.conceptDetail",
-    "onCommand:miranda.runLint",
-    "onCommand:miranda.startTutorial",
-    "onCommand:miranda.openBasicExample",
-    "onCommand:miranda.openComprehensionsExample",
-    "onCommand:miranda.openFibExample",
-    "onCommand:miranda.openLanguageGuide",
-    "onCommand:miranda.openLintSettings",
-    "onCommand:miranda.openWalkthrough",
-    "onCommand:miranda.showLintPanel",
-    "onCommand:miranda.showMirandaSidebar",
-    "onCommand:miranda.openExampleFile",
-    "onCommand:miranda.runLintOnResource",
-    "onCommand:miranda.openSelectedExample",
-    "onCommand:miranda.runLintOnSelectedExample",
-    "onCommand:miranda.goToSelectedLintIssue",
-    "onCommand:miranda.showSelectedConcept",
-    "onCommand:miranda.showConcept",
-    "onCommand:miranda.showConceptPanel",
-    "onCommand:miranda.goToLintIssue"
+    "onStartupFinished"
+   
   ],
   "main": "./out/extension.js",
   "contributes": {
