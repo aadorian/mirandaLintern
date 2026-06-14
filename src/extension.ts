@@ -3,7 +3,7 @@ import { MirandaLintProvider } from "./linter/provider";
 import { registerViews, openExtensionFile } from "./views/registerViews";
 import { registerStatusBar } from "./statusBar";
 
-const WALKTHROUGH_ID = "miranda-lang.miranda#miranda-getting-started";
+const WALKTHROUGH_ID = "AlejandroAdorjan.miranda#miranda-getting-started";
 
 async function openWalkthrough(): Promise<void> {
   await vscode.commands.executeCommand("workbench.action.openWalkthrough", WALKTHROUGH_ID);
